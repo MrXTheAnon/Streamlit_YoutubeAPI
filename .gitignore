@@ -1,0 +1,18 @@
+config.py*.py[cod]
+pynecone.db
+__pycache__/
+.web
+.vscode
+
+# Config file
+config.py
+
+# Assets folder
+assets
+
+# Streamlit config, credential file
+.streamlit
+_tempStreamlit.py
+
+# Virtual environment folder
+aaronVirtual
