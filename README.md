@@ -6,11 +6,11 @@ Hello all, this is my first project using python for listing youtube channel det
 
 ### Files
 
-- [**Streamlit**][stLit]
-- [**Youtube**][yt]
-- [**MongoDb**][mdb]
-- [**SQL**][sql]
-- [**NOTE**][note]
+- **Streamlit**
+- **Youtube**
+- **MongoDb**
+- **SQL**
+- **NOTE**
 
 ### Workflow
 
@@ -23,24 +23,24 @@ You can delete single or all records from both MongoDB and SQL.
 And further some details have been added or queried from SQL to streamlit app.
 
 
-### Streamlit[stlit]
+### Streamlit
 
 Here all the User Interface modules, designs and retreiving data from SQL has been done. All user inputs are given here.
 
 
-### Youtube[yt]
+### Youtube
 
 Here every json responses are collected from channel, playlist, video, comment and it is flattened to required format and passed to MoongoDB Atlas server.
 
-### MongoDb[mdb]
+### MongoDb
 
 Here all single and all documents are queried and deletes one or all documents.
 
-### SQL[sql]
+### SQL
 
 Here all single and all data are queried and deletes one or all data. 
 
-### NOTE[note]
+### NOTE
 
 In MySQL four seperate tables for channel, playlist, video, comments and interlinked with foreign keys with respective id's.
 
