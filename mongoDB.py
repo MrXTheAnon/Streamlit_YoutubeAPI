@@ -21,8 +21,7 @@ def mongoAdd(jsonResponse):
     if jsonResponse['Channel_Name']['Channel_Id'] in mongoFindResp:
         return "Doc already present"
     document = [jsonResponse]
-    db.insert_one(document)
-    # db.insert_many(document) # TODO : Check the condition insertone is working or not.
+    db.insert_many(document)
     ytSqlAddData(jsonResponse=jsonResponse)
         
     # client.close()

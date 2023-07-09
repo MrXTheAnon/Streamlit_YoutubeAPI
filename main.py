@@ -36,7 +36,6 @@ def main():
         else:
             fetchYtDetails(stlitCustURL)
 
-
     # Channel list form.
     channelList = list(stDF.iloc[:]['channel_name'])
     with st.form('listForm', clear_on_submit=True):
@@ -59,15 +58,15 @@ def main():
             f"<h4 style='text-align: justify; color: #FAFAFA;'>{listDestails[0][0]}</h4>", unsafe_allow_html=True)
         # ytCounts.dataframe(stDF.loc[stDF['channel_name']==stlitListAllChannel].iloc[:,3:5], hide_index=True)
         ytSubCount.markdown(
-            f"<h5 style='text-align: center; color: #FAFAFA;'>Sub Count</h5>", unsafe_allow_html=True)
+            "<h5 style='text-align: center; color: #FAFAFA;'>Sub Count</h5>", unsafe_allow_html=True)
         ytSubCount.markdown(
             f"<h5 style='text-align: center; color: #FAFAFA;'>{int(listDestails[0][2]):,}</h5>", unsafe_allow_html=True)
         ytVideoCount.markdown(
-            f"<h5 style='text-align: center; color: #FAFAFA;'>Video Count</h5>", unsafe_allow_html=True)
+            "<h5 style='text-align: center; color: #FAFAFA;'>Video Count</h5>", unsafe_allow_html=True)
         ytVideoCount.markdown(
             f"<h5 style='text-align: center; color: #FAFAFA;'>{int(listDestails[0][1]):,}</h5>", unsafe_allow_html=True)
         ytChView.markdown(
-            f"<h5 style='text-align: center; color: #FAFAFA;'>Channel Views</h5>", unsafe_allow_html=True)
+            "<h5 style='text-align: center; color: #FAFAFA;'>Channel Views</h5>", unsafe_allow_html=True)
         ytChView.markdown(
             f"<h5 style='text-align: center; color: #FAFAFA;'>{int(listDestails[0][3]):,}</h5>", unsafe_allow_html=True)
 
@@ -75,13 +74,12 @@ def main():
     if clearButton.form_submit_button(label='Clear', use_container_width=True):
         mongoDelAll()
         ytSqlDelAll()
-        # print()
+
     # * Delete selected from mongo and sql.
     if delButton.form_submit_button(label='Delete', use_container_width=True):
         # Retreiving channel_id to pass through mongo and sql deletion.
         selectedChannelName = stDF.loc[stDF['channel_name']
                                        == stlitListAllChannel].iloc[0, 0]
-        st.write(selectedChannelName)
         mongoDelOne(delId=selectedChannelName)
         ytSqlDelOne(delId=str(selectedChannelName))
 
@@ -119,14 +117,14 @@ def main():
         # Q2
         st.subheader('High videos channel')
         st.dataframe(stConn.query(
-            'SELECT channel_name, video_count FROM ytChannel ORDER BY video_count DESC;').head(10), hide_index=True, use_container_width=True)
+            'SELECT channel_name AS "Channel Name", video_count AS "Video Count" FROM ytChannel ORDER BY video_count DESC;').head(10), hide_index=True, use_container_width=True)
         # st.dataframe(stDF.iloc[:, 2:4].sort_values(
         #       'video_count', ascending=False).head(10), hide_index=True, use_container_width=True)
 
         # Q3
         stDFQ1 = stConn.query(
             '''
-                SELECT ytCh.channel_name, ytV.video_viewCount
+                SELECT ytCh.channel_name AS "Channel Name", ytV.video_name AS "Video Name", ytV.video_viewCount AS "Video Views"
                 FROM ((ytVideo ytV
                 INNER JOIN ytPlaylist ytP ON ytV.playlist_id = ytP.playlist_id)
                 INNER JOIN ytChannel ytCh ON ytP.channel_id = ytCh.channel_id);
@@ -135,12 +133,12 @@ def main():
         )
         st.subheader('High video views')
         st.dataframe(stDFQ1.sort_values(
-            'video_viewCount', ascending=False).head(10), hide_index=True, use_container_width=True)
+            'Video Views', ascending=False).head(10), hide_index=True, use_container_width=True)
 
         # Q4 & Q10
         stDFQ1 = stConn.query(
             '''
-                SELECT ytV.video_name, ytV.video_commentCount, ytCh.channel_name
+                SELECT ytV.video_name AS "Video Name", ytV.video_commentCount AS "Comment Count", ytCh.channel_name AS "Channel Name"
                 FROM ((ytVideo ytV
                 INNER JOIN ytPlaylist ytP ON ytV.playlist_id = ytP.playlist_id)
                 INNER JOIN ytChannel ytCh ON ytP.channel_id = ytCh.channel_id);
@@ -149,12 +147,12 @@ def main():
         )
         st.subheader('High comment by channel name and video name')
         st.dataframe(stDFQ1.sort_values(
-            'video_commentCount', ascending=False).head(10), hide_index=True, use_container_width=True)
+            'Comment Count', ascending=False).head(10), hide_index=True, use_container_width=True)
 
         # Q5
         stDFQ1 = stConn.query(
             '''
-                SELECT ytCh.channel_name, ytV.video_likeCount
+                SELECT ytCh.channel_name AS "Channel Name", ytV.video_likeCount AS "Like Count"
                 FROM ((ytVideo ytV
                 INNER JOIN ytPlaylist ytP ON ytV.playlist_id = ytP.playlist_id)
                 INNER JOIN ytChannel ytCh ON ytP.channel_id = ytCh.channel_id);
@@ -163,7 +161,7 @@ def main():
         )
         st.subheader('High video like by video name')
         st.dataframe(stDFQ1.sort_values(
-            'video_likeCount', ascending=False).head(10), hide_index=True, use_container_width=True)
+            'Like Count', ascending=False).head(10), hide_index=True, use_container_width=True)
 
         # Q6 Youtube removed dislike.
         stDFQ1 = stConn.query(
@@ -180,12 +178,12 @@ def main():
         # Q7
         st.subheader('High channel views')
         st.dataframe(stConn.query(
-            'SELECT channel_name, channel_views FROM ytChannel ORDER BY channel_views DESC;').head(10), hide_index=True, use_container_width=True)
+            'SELECT channel_name AS "Channel Name", channel_views AS "Channel Views" FROM ytChannel ORDER BY channel_views DESC;').head(10), hide_index=True, use_container_width=True)
 
         # Q8
         stDFQ1 = stConn.query(
             '''
-                SELECT ytCh.channel_name, ytV.video_publishedAt
+                SELECT ytCh.channel_name AS "Channel Name", ytV.video_publishedAt AS "Video Published"
                 FROM ((ytVideo ytV
                 INNER JOIN ytPlaylist ytP ON ytV.playlist_id = ytP.playlist_id)
                 INNER JOIN ytChannel ytCh ON ytP.channel_id = ytCh.channel_id) WHERE YEAR(video_publishedAt) LIKE "%2022";
@@ -194,13 +192,13 @@ def main():
         )
         st.subheader('Channels published video on 2022')
         st.dataframe(stDFQ1.sort_values(
-            'channel_name').head(10), hide_index=True, use_container_width=True)
+            'Channel Name').head(10), hide_index=True, use_container_width=True)
 
         # Q9
         stDFQ1 = stConn.query(
             '''
-                SELECT ytCh.channel_name, 
-                SEC_TO_TIME(ROUND(AVG(TIME_TO_SEC(ytV.video_duration)))) AS average_duration
+                SELECT ytCh.channel_name AS "Channel Name", 
+                SEC_TO_TIME(ROUND(AVG(TIME_TO_SEC(ytV.video_duration)))) AS "Average Duration"
                 FROM ((ytVideo ytV
                 INNER JOIN ytPlaylist ytP ON ytV.playlist_id = ytP.playlist_id)
                 INNER JOIN ytChannel ytCh ON ytP.channel_id = ytCh.channel_id) 
@@ -208,10 +206,10 @@ def main():
                     ''',
             ttl=60
         )
-        stDFQ1['average_duration'] = stDFQ1['average_duration'].astype(str)
+        stDFQ1['Average Duration'] = stDFQ1['Average Duration'].astype(str)
         st.subheader('Avg video duration by channel')
         st.dataframe(stDFQ1.sort_values(
-            'average_duration', ascending=False).head(10), hide_index=True, use_container_width=True)
+            'Average Duration', ascending=False).head(10), hide_index=True, use_container_width=True)
 
 
 if __name__ == "__main__":
